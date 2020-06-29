@@ -1,0 +1,42 @@
+﻿@page "/uploaddocument"
+@inject HttpClient client
+
+<h1>UploadDocument</h1>
+
+<InputFile OnChange="HandleSelection" />
+<button @onclick="OnUploadClick">Upload</button>
+
+<p>@status</p>
+
+@code {
+    string status;
+    IFileListEntry file;
+
+    void HandleSelection(IFileListEntry[] files) {
+        file = files.FirstOrDefault();
+        if (file != null) {
+            status = $"File \"{file.Name}\" is ready for upload.";
+        }
+    }
+
+    async Task OnUploadClick() {
+        if (file != null) {
+            status = "Uploading...";
+
+            var ms = new MemoryStream();
+            await file.Data.CopyToAsync(ms);
+
+            var content = new MultipartFormDataContent {
+                { new ByteArrayContent(ms.ToArray()), "\"upload\"", file.Name }
+            };
+
+            var result = await client.PostAsync("api/Documents", content);
+
+            string resultMessage = result.StatusCode == System.Net.HttpStatusCode.OK 
+                ? "Upload successful!" 
+                : $"Upload failed. Reason: {result.StatusCode.ToString()}";
+
+            status = resultMessage;
+        }
+    }
+}

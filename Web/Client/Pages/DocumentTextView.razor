@@ -1,0 +1,38 @@
+﻿@page "/textview/{DocumentID}"
+@using Web.Shared
+@using System.Text
+@inject HttpClient Http
+
+
+<h1>Document text view</h1>
+
+<p>@text</p>
+
+@if (document == null) {
+    <p><em>Loading...</em></p>
+} else {
+
+}
+
+@code {
+    private DocumentModel document;
+    private string text;
+
+    [Parameter]
+    public string DocumentID { get; set; }
+
+    protected override async Task OnInitializedAsync() {
+        document = await Http.GetFromJsonAsync<DocumentModel>($"api/Documents/{DocumentID}");
+        StringBuilder sb = new StringBuilder();
+        foreach (PageModel page in document.Pages) {
+            foreach (WordModel word in page.Words) {
+                sb.Append(word.Text);
+                sb.Append(" ");
+            }
+            sb.AppendLine();
+        }
+
+        text = sb.ToString();
+    }
+
+}

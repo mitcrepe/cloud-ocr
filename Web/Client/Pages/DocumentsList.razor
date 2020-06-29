@@ -1,0 +1,36 @@
+﻿@page "/documentslist"
+@using Web.Shared
+@inject HttpClient Http
+
+
+<h1>Documents list</h1>
+
+@if (documents == null) {
+    <p><em>Loading...</em></p>
+} else {
+    <table class="table">
+        <thead>
+            <tr>
+                <th>File name</th>
+                <th>...</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DocumentModel document in documents) {
+                <tr>
+                    <td>@document.Name</td>
+                    <td><a href="textview/@document.Id">View Text</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private DocumentModel[] documents;
+
+    protected override async Task OnInitializedAsync() {
+        documents = await Http.GetFromJsonAsync<DocumentModel[]>("api/Documents");
+    }
+
+}
