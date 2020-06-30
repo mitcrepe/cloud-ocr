@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace OcrSpace {
     public class SpaceOcr : IOcr {
-        private readonly string apiKey; //94af3b059788957
+        private readonly string apiKey;
         private readonly HttpClient client;
 
         public SpaceOcr(HttpClient client, string apiKey) {
