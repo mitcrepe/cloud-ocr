@@ -30,7 +30,7 @@ namespace Web.Server {
             services.AddRazorPages();
 
             services.AddSingleton<HttpClient>();
-            services.AddScoped<IOcr, SpaceOcr>(sp => new SpaceOcr(sp.GetService<HttpClient>(), "94af3b059788957"));
+            services.AddScoped<IOcr, SpaceOcr>(sp => new SpaceOcr(sp.GetService<HttpClient>(), ""));
             services.AddSingleton<IStorage, InMemoryStorage.InMemoryStorage>();
             services.AddScoped<IApplicationService, ApplicationService.ApplicationService>();
         }
